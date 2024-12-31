@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <title>Feliz Año Nuevo</title>
+    <style>
+        body {
+            font-family: "Lora", serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url(assets/img/abstract-seamless-heart-pattern-background-paper-vector-23399901.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        .valentines-day {
+            display: none; /* Oculto hasta que el contador termine */
+        }
+
+        .countdown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 182, 193, 0.9); /* Rosa translúcido */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        .countdown {
+            font-size: 48px;
+            color: #fff;
+            text-align: center;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+        }
+
+        .countdown-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #ff4081;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="countdown-overlay">
+        <div class="countdown-title">El tiempo para ver mi mensaje termina en:</div>
+        <div class="countdown" id="countdown"></div>
+    </div>
+
+    <div class="valentines-day">
+        <div class="envelope" onclick="navigateToNextPage()"></div>
+        <div class="heart"></div>
+        <div class="text">¡FELIZ AÑO<br>NUEVO MI AMOR!</div>
+        <div class="front"></div>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        const countdownElement = document.getElementById('countdown');
+        const targetDate = new Date('2025-01-01T00:00:00').getTime(); // Fecha objetivo: 1ro de enero de 2025
+        let fireworksRunning = true;
+    
+        function launchFireworks() {
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: Math.random() * 360,
+                    spread: 55,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() - 0.2,
+                    }
+                });
+    
+                if (fireworksRunning) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+    
+        function stopFireworks() {
+            fireworksRunning = false;
+        }
+    
+        function navigateToNextPage() {
+            stopFireworks(); // Detener fuegos artificiales
+            window.location.href = "mensaje.html"; // Redirige a la siguiente página
+        }
+    
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+    
+            if (difference <= 0) {
+                document.querySelector('.countdown-overlay').style.display = 'none';
+                document.querySelector('.valentines-day').style.display = 'block';
+                clearInterval(countdownInterval);
+            } else {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+    
+                countdownElement.innerHTML = `
+                    ${days} días, ${hours} horas, ${minutes} minutos, ${seconds} segundos
+                `;
+            }
+        }
+    
+        launchFireworks(); // Inicia los fuegos artificiales
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Ejecutar una vez al cargar
+    </script>
+    
+</body>
+
+</html>
